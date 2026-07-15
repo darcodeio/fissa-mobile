@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FISSA</string>
+    <string name="home_title">Gares les plus proches</string>
+    <string name="location_permission_denied">Position indisponible — liste par défaut affichée.</string>
+    <string name="location_permission_rationale">FISSA a besoin de votre position pour afficher les gares les plus proches.</string>
+    <string name="trip_arrival_label">Point d\'arrivée</string>
+    <string name="trip_departure_label">Point de départ</string>
+    <string name="trip_empty_state">Choisissez un départ et une arrivée, puis validez.</string>
+    <string name="trip_search_title">Rechercher un itinéraire</string>
+    <string name="trip_submit">Valider</string>
+    <style name="Theme.FissaKotlin" parent="android:Theme.Material.Light.NoActionBar"/>
+</resources>

@@ -4,5 +4,10 @@ string app_name
 string home_title
 string location_permission_denied
 string location_permission_rationale
+string trip_arrival_label
+string trip_departure_label
+string trip_empty_state
+string trip_search_title
+string trip_submit
 style Theme.FissaKotlin
 xml network_security_config

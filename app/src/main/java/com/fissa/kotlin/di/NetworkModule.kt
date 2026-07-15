@@ -1,8 +1,12 @@
 package com.fissa.kotlin.di
 
 import com.fissa.kotlin.data.remote.RodaApi
+import com.fissa.kotlin.data.repository.PlacesRepository
+import com.fissa.kotlin.data.repository.RodaPlacesRepository
 import com.fissa.kotlin.data.repository.RodaStationsRepository
+import com.fissa.kotlin.data.repository.RodaTripRepository
 import com.fissa.kotlin.data.repository.StationsRepository
+import com.fissa.kotlin.data.repository.TripRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -58,4 +62,10 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindStationsRepository(impl: RodaStationsRepository): StationsRepository
+
+    @Binds
+    abstract fun bindPlacesRepository(impl: RodaPlacesRepository): PlacesRepository
+
+    @Binds
+    abstract fun bindTripRepository(impl: RodaTripRepository): TripRepository
 }

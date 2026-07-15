@@ -3,6 +3,7 @@ package com.fissa.kotlin;
 import com.fissa.kotlin.di.NetworkModule;
 import com.fissa.kotlin.di.RepositoryModule;
 import com.fissa.kotlin.ui.home.HomeViewModel_HiltModules;
+import com.fissa.kotlin.ui.trip.TripSearchViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -158,7 +159,8 @@ public final class FissaApplication_HiltComponents {
           ViewModelCBuilderModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
-          HomeViewModel_HiltModules.KeyModule.class
+          HomeViewModel_HiltModules.KeyModule.class,
+          TripSearchViewModel_HiltModules.KeyModule.class
       }
   )
   @ActivityRetainedScoped
@@ -196,7 +198,8 @@ public final class FissaApplication_HiltComponents {
       modules = {
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
           HomeViewModel_HiltModules.BindsModule.class,
-          RepositoryModule.class
+          RepositoryModule.class,
+          TripSearchViewModel_HiltModules.BindsModule.class
       }
   )
   @ViewModelScoped

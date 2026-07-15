@@ -7,12 +7,16 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 import com.fissa.kotlin.data.remote.RodaApi;
+import com.fissa.kotlin.data.repository.RodaPlacesRepository;
 import com.fissa.kotlin.data.repository.RodaStationsRepository;
+import com.fissa.kotlin.data.repository.RodaTripRepository;
 import com.fissa.kotlin.di.NetworkModule_ProvideOkHttpClientFactory;
 import com.fissa.kotlin.di.NetworkModule_ProvideRetrofitFactory;
 import com.fissa.kotlin.di.NetworkModule_ProvideRodaApiFactory;
 import com.fissa.kotlin.ui.home.HomeViewModel;
 import com.fissa.kotlin.ui.home.HomeViewModel_HiltModules;
+import com.fissa.kotlin.ui.trip.TripSearchViewModel;
+import com.fissa.kotlin.ui.trip.TripSearchViewModel_HiltModules;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.ViewModelLifecycle;
 import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
@@ -32,6 +36,7 @@ import dagger.internal.DoubleCheck;
 import dagger.internal.IdentifierNameString;
 import dagger.internal.KeepFieldType;
 import dagger.internal.LazyClassKeyMap;
+import dagger.internal.MapBuilder;
 import dagger.internal.Preconditions;
 import dagger.internal.Provider;
 import java.util.Collections;
@@ -378,7 +383,7 @@ public final class DaggerFissaApplication_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(Collections.<String, Boolean>singletonMap(LazyClassKeyProvider.com_fissa_kotlin_ui_home_HomeViewModel, HomeViewModel_HiltModules.KeyModule.provide()));
+      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(2).put(LazyClassKeyProvider.com_fissa_kotlin_ui_home_HomeViewModel, HomeViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_fissa_kotlin_ui_trip_TripSearchViewModel, TripSearchViewModel_HiltModules.KeyModule.provide()).build());
     }
 
     @Override
@@ -400,8 +405,13 @@ public final class DaggerFissaApplication_HiltComponents_SingletonC {
     private static final class LazyClassKeyProvider {
       static String com_fissa_kotlin_ui_home_HomeViewModel = "com.fissa.kotlin.ui.home.HomeViewModel";
 
+      static String com_fissa_kotlin_ui_trip_TripSearchViewModel = "com.fissa.kotlin.ui.trip.TripSearchViewModel";
+
       @KeepFieldType
       HomeViewModel com_fissa_kotlin_ui_home_HomeViewModel2;
+
+      @KeepFieldType
+      TripSearchViewModel com_fissa_kotlin_ui_trip_TripSearchViewModel2;
     }
   }
 
@@ -413,6 +423,8 @@ public final class DaggerFissaApplication_HiltComponents_SingletonC {
     private final ViewModelCImpl viewModelCImpl = this;
 
     private Provider<HomeViewModel> homeViewModelProvider;
+
+    private Provider<TripSearchViewModel> tripSearchViewModelProvider;
 
     private ViewModelCImpl(SingletonCImpl singletonCImpl,
         ActivityRetainedCImpl activityRetainedCImpl, SavedStateHandle savedStateHandleParam,
@@ -428,15 +440,24 @@ public final class DaggerFissaApplication_HiltComponents_SingletonC {
       return new RodaStationsRepository(singletonCImpl.provideRodaApiProvider.get());
     }
 
+    private RodaPlacesRepository rodaPlacesRepository() {
+      return new RodaPlacesRepository(singletonCImpl.provideRodaApiProvider.get());
+    }
+
+    private RodaTripRepository rodaTripRepository() {
+      return new RodaTripRepository(singletonCImpl.provideRodaApiProvider.get());
+    }
+
     @SuppressWarnings("unchecked")
     private void initialize(final SavedStateHandle savedStateHandleParam,
         final ViewModelLifecycle viewModelLifecycleParam) {
       this.homeViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
+      this.tripSearchViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
     }
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(Collections.<String, javax.inject.Provider<ViewModel>>singletonMap(LazyClassKeyProvider.com_fissa_kotlin_ui_home_HomeViewModel, ((Provider) homeViewModelProvider)));
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(2).put(LazyClassKeyProvider.com_fissa_kotlin_ui_home_HomeViewModel, ((Provider) homeViewModelProvider)).put(LazyClassKeyProvider.com_fissa_kotlin_ui_trip_TripSearchViewModel, ((Provider) tripSearchViewModelProvider)).build());
     }
 
     @Override
@@ -448,8 +469,13 @@ public final class DaggerFissaApplication_HiltComponents_SingletonC {
     private static final class LazyClassKeyProvider {
       static String com_fissa_kotlin_ui_home_HomeViewModel = "com.fissa.kotlin.ui.home.HomeViewModel";
 
+      static String com_fissa_kotlin_ui_trip_TripSearchViewModel = "com.fissa.kotlin.ui.trip.TripSearchViewModel";
+
       @KeepFieldType
       HomeViewModel com_fissa_kotlin_ui_home_HomeViewModel2;
+
+      @KeepFieldType
+      TripSearchViewModel com_fissa_kotlin_ui_trip_TripSearchViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {
@@ -475,6 +501,9 @@ public final class DaggerFissaApplication_HiltComponents_SingletonC {
         switch (id) {
           case 0: // com.fissa.kotlin.ui.home.HomeViewModel 
           return (T) new HomeViewModel(viewModelCImpl.rodaStationsRepository());
+
+          case 1: // com.fissa.kotlin.ui.trip.TripSearchViewModel 
+          return (T) new TripSearchViewModel(viewModelCImpl.rodaPlacesRepository(), viewModelCImpl.rodaTripRepository());
 
           default: throw new AssertionError(id);
         }

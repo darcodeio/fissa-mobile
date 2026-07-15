@@ -349,6 +349,11 @@ string tab
 string template_percent
 string tooltip_description
 string tooltip_label
+string trip_arrival_label
+string trip_departure_label
+string trip_empty_state
+string trip_search_title
+string trip_submit
 style DialogWindowTheme
 style FloatingDialogTheme
 style FloatingDialogWindowTheme

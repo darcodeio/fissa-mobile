@@ -23,6 +23,8 @@ import hilt_aggregated_deps._com_fissa_kotlin_di_NetworkModule;
 import hilt_aggregated_deps._com_fissa_kotlin_di_RepositoryModule;
 import hilt_aggregated_deps._com_fissa_kotlin_ui_home_HomeViewModel_HiltModules_BindsModule;
 import hilt_aggregated_deps._com_fissa_kotlin_ui_home_HomeViewModel_HiltModules_KeyModule;
+import hilt_aggregated_deps._com_fissa_kotlin_ui_trip_TripSearchViewModel_HiltModules_BindsModule;
+import hilt_aggregated_deps._com_fissa_kotlin_ui_trip_TripSearchViewModel_HiltModules_KeyModule;
 import hilt_aggregated_deps._dagger_hilt_android_flags_FragmentGetContextFix_FragmentGetContextFixEntryPoint;
 import hilt_aggregated_deps._dagger_hilt_android_flags_HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule;
 import hilt_aggregated_deps._dagger_hilt_android_internal_lifecycle_DefaultViewModelFactories_ActivityEntryPoint;
@@ -69,6 +71,8 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
         _com_fissa_kotlin_di_RepositoryModule.class,
         _com_fissa_kotlin_ui_home_HomeViewModel_HiltModules_BindsModule.class,
         _com_fissa_kotlin_ui_home_HomeViewModel_HiltModules_KeyModule.class,
+        _com_fissa_kotlin_ui_trip_TripSearchViewModel_HiltModules_BindsModule.class,
+        _com_fissa_kotlin_ui_trip_TripSearchViewModel_HiltModules_KeyModule.class,
         _dagger_hilt_android_flags_FragmentGetContextFix_FragmentGetContextFixEntryPoint.class,
         _dagger_hilt_android_flags_HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule.class,
         _dagger_hilt_android_internal_lifecycle_DefaultViewModelFactories_ActivityEntryPoint.class,

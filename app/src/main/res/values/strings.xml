@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FISSA</string>
+    <string name="home_title">Gares les plus proches</string>
+    <string name="location_permission_rationale">FISSA a besoin de votre position pour afficher les gares les plus proches.</string>
+    <string name="location_permission_denied">Position indisponible — liste par défaut affichée.</string>
+</resources>

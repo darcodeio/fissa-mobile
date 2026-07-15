@@ -1,0 +1,8 @@
+R_DEF: Internal format may change without notice
+local
+string app_name
+string home_title
+string location_permission_denied
+string location_permission_rationale
+style Theme.FissaKotlin
+xml network_security_config

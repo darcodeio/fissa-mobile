@@ -52,6 +52,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.animation:animation")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.4")
 
     // Réseau — consommation de l'API fissa_roda
@@ -64,8 +66,15 @@ dependencies {
     ksp("com.google.dagger:hilt-android-compiler:2.51.1")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    // Géolocalisation — gares les plus proches
+    // Géolocalisation (position actuelle pour le choix départ/arrivée)
     implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
+
+    // Navigation entre écrans (recherche d'itinéraire ↔ choix d'un lieu ↔ carte)
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // Carte OSM pour la sélection manuelle d'un point (cohérent avec Photon/OTP2, pas de clé API)
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")

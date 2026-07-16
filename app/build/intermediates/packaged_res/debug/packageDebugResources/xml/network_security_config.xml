@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Autorise le HTTP en clair uniquement vers le backend fissa_roda en dev local (voir RODA_BASE_URL dans NetworkModule.kt). À retirer une fois un vrai domaine HTTPS en place. -->
-<network-security-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="false">192.168.100.3</domain>
-        <domain includeSubdomains="false">10.0.2.2</domain>
-    </domain-config>
-</network-security-config>

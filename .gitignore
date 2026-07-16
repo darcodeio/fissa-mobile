@@ -1,10 +1,20 @@
 *.iml
 .gradle/
-/local.properties
-/.idea/
+local.properties
+.idea/
 .DS_Store
-/build/
-/captures/
+
+# Sorties de build Gradle/Android — pas seulement à la racine, aussi dans chaque
+# module (app/build/, etc.). Le pattern précédent `/build/` ne matchait que la racine.
+build/
+captures/
 .externalNativeBuild/
 .cxx/
-local.properties
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Android Studio / Kotlin
+.kotlin/
+release/

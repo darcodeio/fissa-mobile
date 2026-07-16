@@ -19,7 +19,7 @@ class RodaTripRepository @Inject constructor(
     private val mode = "RAIL,WALK"
 
     override suspend fun plan(from: Place, to: Place): List<TripItinerary> {
-        val response = api.planTrip(from.lat, from.lon, to.lat, to.lon, mode)
+        val response = api.planTrip(from.lat, from.lon, from.name, to.lat, to.lon, to.name, mode)
         return response.itineraries.map { itinerary ->
             TripItinerary(
                 durationSeconds = itinerary.duration.roundToInt(),

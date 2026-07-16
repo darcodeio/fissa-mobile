@@ -1,7 +1,9 @@
 package com.fissa.kotlin.di
 
 import com.fissa.kotlin.data.remote.RodaApi
+import com.fissa.kotlin.data.repository.FavoritesRepository
 import com.fissa.kotlin.data.repository.PlacesRepository
+import com.fissa.kotlin.data.repository.RodaFavoritesRepository
 import com.fissa.kotlin.data.repository.RodaPlacesRepository
 import com.fissa.kotlin.data.repository.RodaStationsRepository
 import com.fissa.kotlin.data.repository.RodaTripRepository
@@ -68,4 +70,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindTripRepository(impl: RodaTripRepository): TripRepository
+
+    @Binds
+    abstract fun bindFavoritesRepository(impl: RodaFavoritesRepository): FavoritesRepository
 }

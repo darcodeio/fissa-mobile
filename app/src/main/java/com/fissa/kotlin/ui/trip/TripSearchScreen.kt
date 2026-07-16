@@ -1,9 +1,18 @@
 package com.fissa.kotlin.ui.trip
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -15,13 +24,16 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,7 +43,11 @@ import com.fissa.kotlin.domain.model.TripItinerary
 import com.fissa.kotlin.domain.model.TripLeg
 
 @Composable
-fun TripSearchRoute(viewModel: TripSearchViewModel = hiltViewModel()) {
+fun TripSearchRoute(
+    viewModel: TripSearchViewModel = hiltViewModel(),
+    onDepartureFieldClick: () -> Unit,
+    onArrivalFieldClick: () -> Unit,
+) {
     val departure by viewModel.departure.collectAsState()
     val arrival by viewModel.arrival.collectAsState()
     val tripState by viewModel.tripState.collectAsState()
@@ -40,10 +56,8 @@ fun TripSearchRoute(viewModel: TripSearchViewModel = hiltViewModel()) {
         departure = departure,
         arrival = arrival,
         tripState = tripState,
-        onDepartureQueryChanged = viewModel::onDepartureQueryChanged,
-        onDepartureSelected = viewModel::onDepartureSelected,
-        onArrivalQueryChanged = viewModel::onArrivalQueryChanged,
-        onArrivalSelected = viewModel::onArrivalSelected,
+        onDepartureFieldClick = onDepartureFieldClick,
+        onArrivalFieldClick = onArrivalFieldClick,
         onSubmit = viewModel::submit,
     )
 }
@@ -51,13 +65,11 @@ fun TripSearchRoute(viewModel: TripSearchViewModel = hiltViewModel()) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TripSearchScreen(
-    departure: PlaceFieldState,
-    arrival: PlaceFieldState,
+    departure: Place?,
+    arrival: Place?,
     tripState: TripUiState,
-    onDepartureQueryChanged: (String) -> Unit,
-    onDepartureSelected: (Place) -> Unit,
-    onArrivalQueryChanged: (String) -> Unit,
-    onArrivalSelected: (Place) -> Unit,
+    onDepartureFieldClick: () -> Unit,
+    onArrivalFieldClick: () -> Unit,
     onSubmit: () -> Unit,
 ) {
     Scaffold(
@@ -70,22 +82,31 @@ fun TripSearchScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            PlaceField(
+            LocationField(
                 label = stringResource(R.string.trip_departure_label),
-                state = departure,
-                onQueryChanged = onDepartureQueryChanged,
-                onSelected = onDepartureSelected,
+                place = departure,
+                onClick = onDepartureFieldClick,
             )
-            PlaceField(
+            LocationField(
                 label = stringResource(R.string.trip_arrival_label),
-                state = arrival,
-                onQueryChanged = onArrivalQueryChanged,
-                onSelected = onArrivalSelected,
+                place = arrival,
+                onClick = onArrivalFieldClick,
+            )
+
+            val submitInteractionSource = remember { MutableInteractionSource() }
+            val isSubmitPressed by submitInteractionSource.collectIsPressedAsState()
+            val submitScale by animateFloatAsState(
+                targetValue = if (isSubmitPressed) 0.96f else 1f,
+                animationSpec = tween(100),
+                label = "submitButtonScale",
             )
             Button(
                 onClick = onSubmit,
-                enabled = departure.selected != null && arrival.selected != null,
-                modifier = Modifier.fillMaxWidth(),
+                enabled = departure != null && arrival != null,
+                interactionSource = submitInteractionSource,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .scale(submitScale),
             ) {
                 Text(stringResource(R.string.trip_submit))
             }
@@ -94,46 +115,44 @@ fun TripSearchScreen(
     }
 }
 
+/** Champ en lecture seule : cliquer dessus ouvre l'écran de choix du lieu (autocomplete, GPS,
+ * carte ou favori) plutôt que de saisir directement le texte ici. */
 @Composable
-private fun PlaceField(
-    label: String,
-    state: PlaceFieldState,
-    onQueryChanged: (String) -> Unit,
-    onSelected: (Place) -> Unit,
-) {
-    Column {
-        OutlinedTextField(
-            value = state.query,
-            onValueChange = onQueryChanged,
-            label = { Text(label) },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
-        )
-        if (state.selected == null && state.suggestions.isNotEmpty()) {
-            Card(modifier = Modifier.fillMaxWidth()) {
-                Column {
-                    state.suggestions.forEach { place ->
-                        Text(
-                            text = place.name,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onSelected(place) }
-                                .padding(12.dp),
-                        )
-                    }
-                }
-            }
-        }
-    }
+private fun LocationField(label: String, place: Place?, onClick: () -> Unit) {
+    OutlinedTextField(
+        value = place?.name.orEmpty(),
+        onValueChange = {},
+        readOnly = true,
+        enabled = false,
+        label = { Text(label) },
+        singleLine = true,
+        colors = OutlinedTextFieldDefaults.colors(
+            disabledTextColor = MaterialTheme.colorScheme.onSurface,
+            disabledBorderColor = MaterialTheme.colorScheme.outline,
+            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+    )
 }
 
 @Composable
 private fun TripResults(tripState: TripUiState) {
-    when (tripState) {
-        is TripUiState.Idle -> Text(stringResource(R.string.trip_empty_state))
-        is TripUiState.Loading -> CircularProgressIndicator()
-        is TripUiState.Error -> Text(tripState.message)
-        is TripUiState.Success -> ItineraryList(tripState.itineraries)
+    AnimatedContent(
+        targetState = tripState,
+        transitionSpec = {
+            (fadeIn(tween(220)) + slideInVertically(tween(220)) { it / 6 }) togetherWith
+                (fadeOut(tween(120)) + slideOutVertically(tween(120)) { -it / 6 })
+        },
+        label = "tripResults",
+    ) { state ->
+        when (state) {
+            is TripUiState.Idle -> Text(stringResource(R.string.trip_empty_state))
+            is TripUiState.Loading -> CircularProgressIndicator()
+            is TripUiState.Error -> Text(state.message)
+            is TripUiState.Success -> ItineraryList(state.itineraries)
+        }
     }
 }
 

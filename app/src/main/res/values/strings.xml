@@ -10,4 +10,17 @@
     <string name="trip_arrival_label">Point d\'arrivée</string>
     <string name="trip_submit">Valider</string>
     <string name="trip_empty_state">Choisissez un départ et une arrivée, puis validez.</string>
+
+    <string name="location_picker_departure_title">Choisir le point de départ</string>
+    <string name="location_picker_arrival_title">Choisir le point d\'arrivée</string>
+    <string name="location_picker_search_label">Rechercher une adresse</string>
+    <string name="location_picker_current_location">Utiliser ma position actuelle (GPS)</string>
+    <string name="location_picker_choose_on_map">Choisir sur la carte</string>
+    <string name="location_picker_favorites_title">Favoris</string>
+    <string name="location_picker_favorites_empty">Aucun favori pour l\'instant.</string>
+
+    <string name="map_picker_title">Choisir sur la carte</string>
+    <string name="map_picker_confirm">Confirmer ce point</string>
+    <string name="map_picker_zoom_in">Zoomer</string>
+    <string name="map_picker_zoom_out">Dézoomer</string>
 </resources>

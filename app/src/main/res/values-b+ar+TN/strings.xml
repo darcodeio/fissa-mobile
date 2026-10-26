@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FISSA</string>
+    <string name="home_title">أقرب المحطات</string>
+    <string name="home_distance_meters">%1$d م</string>
+    <string name="home_no_departure">ما فماش قطار</string>
+    <string name="location_permission_rationale">فيسا محتاجة الموقع متاعك باش تعرض أقرب المحطات.</string>
+    <string name="location_permission_denied">الموقع مش متوفر — تُعرض قائمة افتراضية.</string>
+
+    <string name="trip_search_title">لوّج على مسارك</string>
+    <string name="trip_departure_label">نقطة الانطلاق</string>
+    <string name="trip_arrival_label">نقطة الوصول</string>
+    <string name="trip_submit">أكّد</string>
+    <string name="trip_empty_state">اختار نقطة الانطلاق والوصول، وبعد أكّد.</string>
+    <string name="trip_swap_locations">بدّل نقطة الانطلاق بنقطة الوصول</string>
+
+    <string name="location_picker_departure_title">اختار نقطة الانطلاق</string>
+    <string name="location_picker_arrival_title">اختار نقطة الوصول</string>
+    <string name="location_picker_search_label">لوّج على عنوان</string>
+    <string name="location_picker_current_location">استعمل الموقع الحالي متاعي (GPS)</string>
+    <string name="location_picker_choose_on_map">اختار من الخريطة</string>
+    <string name="location_picker_favorites_title">المفضلة</string>
+    <string name="location_picker_favorites_empty">ما فماش حتى مفضلة لتوّة.</string>
+
+    <string name="map_picker_title">اختار من الخريطة</string>
+    <string name="map_picker_confirm">أكّد النقطة هاذي</string>
+    <string name="map_picker_zoom_in">كبّر</string>
+    <string name="map_picker_zoom_out">صغّر</string>
+    <string name="map_picker_selected_fallback_name">نقطة مختارة من الخريطة</string>
+
+    <string name="trip_error_unknown">خطأ غير معروف</string>
+    <string name="trip_leg_summary">%1$s — %2$s → %3$s (%4$d م، %5$s)</string>
+    <string name="trip_unknown_place">؟</string>
+    <string name="trip_duration_minutes">%1$d د</string>
+    <string name="trip_duration_hours">%1$dس%2$02d</string>
+    <string name="current_location_name">الموقع الحالي متاعي</string>
+    <string name="location_unavailable_error">الموقع مش متوفر</string>
+</resources>

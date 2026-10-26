@@ -13,13 +13,15 @@ interface TripRepository {
 
 class RodaTripRepository @Inject constructor(
     private val api: RodaApi,
+    private val deviceRegistrar: DeviceRegistrar,
 ) : TripRepository {
 
     /** Phase 1 du client Kotlin : train + marche uniquement (voir CLAUDE.md). */
     private val mode = "RAIL,WALK"
 
     override suspend fun plan(from: Place, to: Place): List<TripItinerary> {
-        val response = api.planTrip(from.lat, from.lon, from.name, to.lat, to.lon, to.name, mode)
+        val uuid = deviceRegistrar.uuid()
+        val response = api.planTrip(from.lat, from.lon, from.name, to.lat, to.lon, to.name, mode, uuid)
         return response.itineraries.map { itinerary ->
             TripItinerary(
                 durationSeconds = itinerary.duration.roundToInt(),

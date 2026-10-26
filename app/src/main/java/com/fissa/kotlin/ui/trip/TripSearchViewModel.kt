@@ -1,11 +1,14 @@
 package com.fissa.kotlin.ui.trip
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fissa.kotlin.R
 import com.fissa.kotlin.data.repository.TripRepository
 import com.fissa.kotlin.domain.model.Place
 import com.fissa.kotlin.domain.model.TripItinerary
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +25,7 @@ sealed interface TripUiState {
 @HiltViewModel
 class TripSearchViewModel @Inject constructor(
     private val tripRepository: TripRepository,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     private val _departure = MutableStateFlow<Place?>(null)
@@ -41,6 +45,13 @@ class TripSearchViewModel @Inject constructor(
         _arrival.value = place
     }
 
+    fun swapLocations() {
+        val from = _departure.value
+        val to = _arrival.value
+        _departure.value = to
+        _arrival.value = from
+    }
+
     fun submit() {
         val from = _departure.value ?: return
         val to = _arrival.value ?: return
@@ -50,7 +61,7 @@ class TripSearchViewModel @Inject constructor(
             _tripState.value = try {
                 TripUiState.Success(tripRepository.plan(from, to))
             } catch (e: Exception) {
-                TripUiState.Error(e.message ?: "Erreur inconnue")
+                TripUiState.Error(e.message ?: context.getString(R.string.trip_error_unknown))
             }
         }
     }

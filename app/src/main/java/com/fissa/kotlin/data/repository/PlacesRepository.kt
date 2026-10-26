@@ -14,11 +14,12 @@ interface PlacesRepository {
 
 class RodaPlacesRepository @Inject constructor(
     private val api: RodaApi,
+    private val deviceRegistrar: DeviceRegistrar,
 ) : PlacesRepository {
 
     override suspend fun search(query: String): List<Place> {
         if (query.isBlank()) return emptyList()
-        return api.searchPlaces(query).map { Place(it.name, it.lat, it.lon) }
+        return api.searchPlaces(query, deviceRegistrar.uuid()).map { Place(it.name, it.lat, it.lon) }
     }
 
     override suspend fun reverseGeocode(lat: Double, lon: Double, fallbackName: String): Place {

@@ -12,19 +12,27 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -32,6 +40,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
@@ -58,6 +67,7 @@ fun TripSearchRoute(
         tripState = tripState,
         onDepartureFieldClick = onDepartureFieldClick,
         onArrivalFieldClick = onArrivalFieldClick,
+        onSwapLocations = viewModel::swapLocations,
         onSubmit = viewModel::submit,
     )
 }
@@ -70,6 +80,7 @@ fun TripSearchScreen(
     tripState: TripUiState,
     onDepartureFieldClick: () -> Unit,
     onArrivalFieldClick: () -> Unit,
+    onSwapLocations: () -> Unit,
     onSubmit: () -> Unit,
 ) {
     Scaffold(
@@ -82,15 +93,12 @@ fun TripSearchScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            LocationField(
-                label = stringResource(R.string.trip_departure_label),
-                place = departure,
-                onClick = onDepartureFieldClick,
-            )
-            LocationField(
-                label = stringResource(R.string.trip_arrival_label),
-                place = arrival,
-                onClick = onArrivalFieldClick,
+            TripFieldsCard(
+                departure = departure,
+                arrival = arrival,
+                onDepartureFieldClick = onDepartureFieldClick,
+                onArrivalFieldClick = onArrivalFieldClick,
+                onSwapLocations = onSwapLocations,
             )
 
             val submitInteractionSource = remember { MutableInteractionSource() }
@@ -115,26 +123,84 @@ fun TripSearchScreen(
     }
 }
 
-/** Champ en lecture seule : cliquer dessus ouvre l'écran de choix du lieu (autocomplete, GPS,
- * carte ou favori) plutôt que de saisir directement le texte ici. */
+private val SWAP_BUTTON_SIZE = 48.dp
+
+/** Départ et arrivée regroupés dans une seule carte façon Google Maps, séparés par un
+ * séparateur, avec le bouton d'inversion tout à droite de la ligne d'arrivée. La ligne de
+ * départ réserve un espace de la même largeur que ce bouton pour que les deux lignes gardent
+ * une largeur de texte identique lors de l'inversion. */
 @Composable
-private fun LocationField(label: String, place: Place?, onClick: () -> Unit) {
-    OutlinedTextField(
-        value = place?.name.orEmpty(),
-        onValueChange = {},
-        readOnly = true,
-        enabled = false,
-        label = { Text(label) },
-        singleLine = true,
-        colors = OutlinedTextFieldDefaults.colors(
-            disabledTextColor = MaterialTheme.colorScheme.onSurface,
-            disabledBorderColor = MaterialTheme.colorScheme.outline,
-            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        ),
+private fun TripFieldsCard(
+    departure: Place?,
+    arrival: Place?,
+    onDepartureFieldClick: () -> Unit,
+    onArrivalFieldClick: () -> Unit,
+    onSwapLocations: () -> Unit,
+) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column {
+            LocationRow(
+                label = stringResource(R.string.trip_departure_label),
+                place = departure,
+                onClick = onDepartureFieldClick,
+                trailingContent = { Box(modifier = Modifier.size(SWAP_BUTTON_SIZE)) },
+            )
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.outlineVariant,
+            )
+            LocationRow(
+                label = stringResource(R.string.trip_arrival_label),
+                place = arrival,
+                onClick = onArrivalFieldClick,
+                trailingContent = {
+                    IconButton(
+                        onClick = onSwapLocations,
+                        modifier = Modifier.size(SWAP_BUTTON_SIZE),
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.SwapVert,
+                            contentDescription = stringResource(R.string.trip_swap_locations),
+                        )
+                    }
+                },
+            )
+        }
+    }
+}
+
+/** Ligne cliquable en lecture seule : ouvre l'écran de choix du lieu (autocomplete, GPS, carte
+ * ou favori) plutôt que de saisir directement le texte ici. */
+@Composable
+private fun LocationRow(
+    label: String,
+    place: Place?,
+    onClick: () -> Unit,
+    trailingContent: @Composable () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick),
-    )
+            .clickable(onClick = onClick)
+            .padding(start = 16.dp, end = 4.dp, top = 14.dp, bottom = 14.dp),
+    ) {
+        Text(
+            text = place?.name ?: label,
+            style = MaterialTheme.typography.bodyLarge,
+            color = if (place != null) {
+                MaterialTheme.colorScheme.onSurface
+            } else {
+                MaterialTheme.colorScheme.onSurfaceVariant
+            },
+            modifier = Modifier.weight(1f),
+        )
+        trailingContent()
+    }
 }
 
 @Composable
@@ -173,12 +239,26 @@ private fun ItineraryCard(itinerary: TripItinerary) {
     }
 }
 
+@Composable
 private fun formatLeg(leg: TripLeg): String {
     val label = leg.routeShortName?.let { "${leg.mode} $it" } ?: leg.mode
-    return "$label — ${leg.fromName ?: "?"} → ${leg.toName ?: "?"} (${leg.distanceMeters} m, ${formatDuration(leg.durationSeconds)})"
+    val unknownPlace = stringResource(R.string.trip_unknown_place)
+    return stringResource(
+        R.string.trip_leg_summary,
+        label,
+        leg.fromName ?: unknownPlace,
+        leg.toName ?: unknownPlace,
+        leg.distanceMeters,
+        formatDuration(leg.durationSeconds),
+    )
 }
 
+@Composable
 private fun formatDuration(seconds: Int): String {
     val minutes = seconds / 60
-    return if (minutes < 60) "$minutes min" else "${minutes / 60}h${(minutes % 60).toString().padStart(2, '0')}"
+    return if (minutes < 60) {
+        stringResource(R.string.trip_duration_minutes, minutes)
+    } else {
+        stringResource(R.string.trip_duration_hours, minutes / 60, minutes % 60)
+    }
 }

@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">FISSA</string>
     <string name="home_title">Gares les plus proches</string>
+    <string name="home_distance_meters">%1$d m</string>
+    <string name="home_no_departure">aucun passage</string>
     <string name="location_permission_rationale">FISSA a besoin de votre position pour afficher les gares les plus proches.</string>
     <string name="location_permission_denied">Position indisponible — liste par défaut affichée.</string>
 
@@ -10,6 +12,7 @@
     <string name="trip_arrival_label">Point d\'arrivée</string>
     <string name="trip_submit">Valider</string>
     <string name="trip_empty_state">Choisissez un départ et une arrivée, puis validez.</string>
+    <string name="trip_swap_locations">Inverser le départ et l\'arrivée</string>
 
     <string name="location_picker_departure_title">Choisir le point de départ</string>
     <string name="location_picker_arrival_title">Choisir le point d\'arrivée</string>
@@ -23,4 +26,13 @@
     <string name="map_picker_confirm">Confirmer ce point</string>
     <string name="map_picker_zoom_in">Zoomer</string>
     <string name="map_picker_zoom_out">Dézoomer</string>
+    <string name="map_picker_selected_fallback_name">Point sélectionné sur la carte</string>
+
+    <string name="trip_error_unknown">Erreur inconnue</string>
+    <string name="trip_leg_summary">%1$s — %2$s → %3$s (%4$d m, %5$s)</string>
+    <string name="trip_unknown_place">?</string>
+    <string name="trip_duration_minutes">%1$d min</string>
+    <string name="trip_duration_hours">%1$dh%2$02d</string>
+    <string name="current_location_name">Ma position actuelle</string>
+    <string name="location_unavailable_error">Position indisponible</string>
 </resources>

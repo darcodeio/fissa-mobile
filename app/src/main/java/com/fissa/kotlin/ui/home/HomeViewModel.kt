@@ -1,15 +1,18 @@
 package com.fissa.kotlin.ui.home
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fissa.kotlin.R
 import com.fissa.kotlin.data.repository.StationsRepository
 import com.fissa.kotlin.domain.model.NearbyStation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 sealed interface HomeUiState {
     data object Loading : HomeUiState
@@ -20,6 +23,7 @@ sealed interface HomeUiState {
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val stationsRepository: StationsRepository,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
@@ -31,7 +35,7 @@ class HomeViewModel @Inject constructor(
             _uiState.value = try {
                 HomeUiState.Success(stationsRepository.getNearbyStations(latitude, longitude))
             } catch (e: Exception) {
-                HomeUiState.Error(e.message ?: "Erreur inconnue")
+                HomeUiState.Error(e.message ?: context.getString(R.string.trip_error_unknown))
             }
         }
     }

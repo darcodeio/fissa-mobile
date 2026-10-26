@@ -20,7 +20,7 @@ interface RodaApi {
 
     /** Autocomplete d'adresses — proxy Photon côté fissa_roda. */
     @GET("api/v1/places")
-    suspend fun searchPlaces(@Query("q") query: String): List<PlaceDto>
+    suspend fun searchPlaces(@Query("q") query: String, @Query("uuid") uuid: String?): List<PlaceDto>
 
     /** Reverse-geocoding — résout une adresse lisible à partir de coordonnées (GPS, carte). */
     @GET("api/v1/places/reverse")
@@ -37,12 +37,15 @@ interface RodaApi {
         @Field("to_lon") toLon: Double,
         @Field("to_name") toName: String,
         @Field("mode") mode: String,
+        @Field("uuid") uuid: String?,
     ): TripResponseDto
 
-    /** Enregistrement/upsert du device — préalable obligatoire à tout appel /api/v1/favorites. */
+    /** Enregistrement du device — appelé au démarrage de l'appli (voir FissaApplication).
+     * uuid null => premier lancement, Roda génère et renvoie l'uuid à persister localement.
+     * uuid non-null => confirme un uuid déjà connu (met à jour last_seen_at côté Roda). */
     @FormUrlEncoded
     @POST("api/v1/devices")
-    suspend fun registerDevice(@Field("uuid") uuid: String): DeviceRegistrationDto
+    suspend fun registerDevice(@Field("uuid") uuid: String?): DeviceRegistrationDto
 
     @GET("api/v1/favorites")
     suspend fun getFavorites(@Query("uuid") uuid: String): List<PlaceDto>

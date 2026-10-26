@@ -81,12 +81,12 @@ private fun StationCard(station: NearbyStation) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = station.name, style = MaterialTheme.typography.titleMedium)
             Text(
-                text = "${station.distanceMeters} m",
+                text = stringResource(R.string.home_distance_meters, station.distanceMeters),
                 style = MaterialTheme.typography.bodySmall,
             )
             station.departures.forEach { departure ->
                 Text(
-                    text = "${departure.direction} — ${departure.nextDepartureAt ?: "aucun passage"}",
+                    text = "${departure.direction} — ${departure.nextDepartureAt ?: stringResource(R.string.home_no_departure)}",
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
